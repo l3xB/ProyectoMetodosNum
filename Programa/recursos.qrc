@@ -1,7 +1,0 @@
-<RCC>
-  <qresource prefix="iconos">
-    <file>ui/icons/matriz.png</file>
-    <file>ui/icons/function.png</file>
-    <file>ui/icons/parabola.png</file>
-  </qresource>
-</RCC>
