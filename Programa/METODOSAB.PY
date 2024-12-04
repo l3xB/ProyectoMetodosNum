@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox, Toplevel
+from tkinter import messagebox, Toplevel, ttk
 import sympy as sp
 from sympy.parsing.sympy_parser import parse_expr
 import pandas as pd
@@ -111,12 +111,18 @@ class FunctivaApp:
     def mostrar_iteraciones(self, iteraciones, columnas):
         ventana = Toplevel(self.root)
         ventana.title("Iteraciones")
-        ventana.geometry("600x400")
-        # Crear tabla con pandas
-        df = pd.DataFrame(iteraciones, columns=columnas)
-        text = tk.Text(ventana, wrap="none")
-        text.insert(tk.END, df.to_string(index=False))
-        text.pack(expand=True, fill=tk.BOTH)
+        ventana.geometry("800x400")
+
+        tree = ttk.Treeview(ventana, columns=columnas, show="headings")
+        for col in columnas:
+            tree.heading(col, text=col)
+            tree.column(col, width=100, anchor="center")
+
+        for fila in iteraciones:
+            tree.insert("", tk.END, values=fila)
+
+        tree.pack(expand=True, fill=tk.BOTH)
+        # Métodos numéricos
 
     # Métodos numéricos
     def newton_raphson(self, funcion, x, tol=1e-6, max_iter=100):
