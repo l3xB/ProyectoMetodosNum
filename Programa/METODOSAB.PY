@@ -108,6 +108,7 @@ class FunctivaApp:
         else:
             messagebox.showerror("Error", "Primero cargue una función válida.")
 
+#cambio
     def mostrar_iteraciones(self, iteraciones, columnas):
         ventana = Toplevel(self.root)
         ventana.title("Iteraciones")
