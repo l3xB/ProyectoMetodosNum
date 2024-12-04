@@ -1,17 +1,21 @@
 #arreglar metodos abiertos y cerrados:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #matriz inversa funciona bien
 import tkinter as tk
-from tkinter import messagebox, Toplevel, ttk
-import numpy as np
-import sympy as sp
-from sympy.parsing.sympy_parser import parse_expr
-import subprocess  # Asegúrate de incluir esto al inicio del archivo
+from tkinter import messagebox
+import subprocess
+import sys
+
+try:
+    subprocess.check_call(['pip', 'install', '-r', 'requirements.txt'])
+except subprocess.CalledProcessError as e:
+    print("Error al instalar las dependencias:", e)
+    sys.exit(1)
 
 class FunctivaApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Functiva")
-        self.root.geometry("600x600")
+        self.root.geometry("600x300")
         self.root.configure(bg="lightblue")
         self.create_widgets()
 

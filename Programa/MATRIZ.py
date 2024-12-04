@@ -1,8 +1,7 @@
-#gaus jordan, gaus, matriz inversaa funcionan # cuiddado con multiples respuetas en gaus
+#gaus jordan, gaus, matriz inversaa funcionan # cuidado con multiples respuetas en gaus
 import tkinter as tk
 from tkinter import messagebox, Toplevel, ttk
 import numpy as np
-import sympy as sp
 from sympy.parsing.sympy_parser import parse_expr
 
 
@@ -99,24 +98,6 @@ class FunctivaApp:
                 messagebox.showerror("Error", f"Error al resolver las ecuaciones: {e}")
         else:
             messagebox.showerror("Error", "Primero cargue una matriz válida.")
-    '''''
-
-    def gauss(self, A, b):
-        try:
-            n = len(b)
-            # Método de eliminación de Gauss
-            for i in range(n):
-                for j in range(i + 1, n):
-                    ratio = A[j, i] / A[i, i]
-                    A[j, :] -= ratio * A[i, :]
-                    b[j] -= ratio * b[i]
-            # Sustitución hacia atrás
-            x = np.zeros(n)
-            for i in range(n - 1, -1, -1):
-                x[i] = (b[i] - np.dot(A[i, i + 1:], x[i + 1:])) / A[i, i]
-            self.show_result(f"Solución por Gauss: \n{x}")
-        except Exception as e:
-            messagebox.showerror("Error", f"Error en Gauss: {e}")'''
     
     def gauss(self, A, b):
         try:

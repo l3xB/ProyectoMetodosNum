@@ -6,7 +6,6 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 import sympy as sp
-import numpy as np
 
 
 class IntegrationApp:
