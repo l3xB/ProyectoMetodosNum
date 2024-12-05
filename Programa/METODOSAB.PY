@@ -95,16 +95,16 @@ class FunctivaApp:
             x = sp.symbols('x')
             if metodo_principal == "Métodos Abiertos":
                 if metodo_especifico == "Newton-Raphson":
-                    self.newton_raphson(self.funcion, x)
+                    self.newton_raphson(self.funcion, x,1)
                 elif metodo_especifico == "Secante":
-                    self.secante(self.funcion, x)
+                    self.secante(self.funcion, x,1)
             elif metodo_principal == "Métodos Cerrados":
                 a = float(self.a_entry.get())
                 b = float(self.b_entry.get())
                 if metodo_especifico == "Bisección":
-                    self.biseccion(self.funcion, x, a, b)
+                    self.biseccion(self.funcion, x, a, b,1)
                 elif metodo_especifico == "Falsa Posición":
-                    self.falsa_posicion(self.funcion, x, a, b)
+                    self.falsa_posicion(self.funcion, x, a, b,1)
         else:
             messagebox.showerror("Error", "Primero cargue una función válida.")
 
@@ -134,7 +134,7 @@ class FunctivaApp:
             fx = funcion.evalf(subs={x: x0})
             dfx = derivada.evalf(subs={x: x0})
             x1 = x0 - fx / dfx
-            error = abs(x1 - x0)
+            error = abs(x1 - x0)*100
             iteraciones.append([i + 1, x0, fx, dfx, x1, error])
             if error < tol:
                 columnas = ["Iteración", "x0", "f(x0)", "f'(x0)", "x1", "Error"]
@@ -151,7 +151,7 @@ class FunctivaApp:
             f_x0 = funcion.evalf(subs={x: x0})
             f_x1 = funcion.evalf(subs={x: x1})
             x2 = x1 - f_x1 * (x1 - x0) / (f_x1 - f_x0)
-            error = abs(x2 - x1)
+            error = abs(x2 - x1)*100
             iteraciones.append([i + 1, x0, x1, f_x0, f_x1, x2, error])
             if error < tol:
                 columnas = ["Iteración", "x0", "x1", "f(x0)", "f(x1)", "x2", "Error"]
@@ -163,45 +163,59 @@ class FunctivaApp:
 
     def biseccion(self, funcion, x, a, b, tol=1e-6, max_iter=100):
         iteraciones = []
-        if funcion.evalf(subs={x: a}) * funcion.evalf(subs={x: b}) > 0:
-            messagebox.showerror("Error", "El intervalo no contiene una raíz.")
+        if abs(funcion.evalf(subs={x: a})) < tol:
+            messagebox.showinfo("Resultado", f"Raíz encontrada en a: {a}")
             return
+        elif abs(funcion.evalf(subs={x: b})) < tol:
+            messagebox.showinfo("Resultado", f"Raíz encontrada en b: {b}")
+            return
+
         for i in range(max_iter):
             c = (a + b) / 2
-            error = abs(b - a) / 2
-            iteraciones.append([i + 1, a, b, c, funcion.evalf(subs={x: c}), error])
+            error = (abs(b - a) / 2)*100
+            iteraciones.append([i + 1, a, b, c, abs(funcion.evalf(subs={x: c})), error])
             if abs(funcion.evalf(subs={x: c})) < tol or error < tol:
-                columnas = ["Iteración", "a", "b", "c", "f(c)", "Error"]
+                columnas = ["Iteración", "a", "b", "c", "|f(c)|", "Error"]
                 self.mostrar_iteraciones(iteraciones, columnas)
-                messagebox.showinfo("Resultado", f"Raíz encontrada: {c}")
+                messagebox.showinfo("Resultado", f"Raíz aproximada encontrada: {c}")
                 return
-            if funcion.evalf(subs={x: a}) * funcion.evalf(subs={x: c}) < 0:
+
+            # Comparar los módulos (magnitudes) de los números complejos
+            if abs(funcion.evalf(subs={x: a})) * abs(funcion.evalf(subs={x: c})) < 0:
                 b = c
             else:
                 a = c
+
         messagebox.showerror("Error", "No se encontró raíz con el método de bisección.")
 
     def falsa_posicion(self, funcion, x, a, b, tol=1e-6, max_iter=100):
         iteraciones = []
-        if funcion.evalf(subs={x: a}) * funcion.evalf(subs={x: b}) > 0:
-            messagebox.showerror("Error", "El intervalo no contiene una raíz.")
+        if abs(funcion.evalf(subs={x: a})) < tol:
+            messagebox.showinfo("Resultado", f"Raíz encontrada en a: {a}")
             return
+        elif abs(funcion.evalf(subs={x: b})) < tol:
+            messagebox.showinfo("Resultado", f"Raíz encontrada en b: {b}")
+            return
+
         for i in range(max_iter):
             fa = funcion.evalf(subs={x: a})
             fb = funcion.evalf(subs={x: b})
             c = b - (fb * (b - a)) / (fb - fa)
-            error = abs(funcion.evalf(subs={x: c}))
-            iteraciones.append([i + 1, a, b, c, fa, fb, error])
+            error = (abs(funcion.evalf(subs={x: c})))*100
+            iteraciones.append([i + 1, a, b, c, abs(fa), abs(fb), error])
             if error < tol:
-                columnas = ["Iteración", "a", "b", "c", "f(a)", "f(b)", "Error"]
+                columnas = ["Iteración", "a", "b", "c", "|f(a)|", "|f(b)|", "Error"]
                 self.mostrar_iteraciones(iteraciones, columnas)
-                messagebox.showinfo("Resultado", f"Raíz encontrada: {c}")
+                messagebox.showinfo("Resultado", f"Raíz aproximada encontrada: {c}")
                 return
-            if fa * funcion.evalf(subs={x: c}) < 0:
+
+            # Comparar los módulos (magnitudes) de los números complejos
+            if abs(fa) * abs(funcion.evalf(subs={x: c})) < 0:
                 b = c
             else:
                 a = c
-        messagebox.showerror("Error", "No se encontró raíz con el método de falsa posición.")
+
+        messagebox.showerror("Error", "No se encontró raíz con el método de falsa posición.")
 
 # Crear la ventana principal de la aplicación
 root = tk.Tk()
