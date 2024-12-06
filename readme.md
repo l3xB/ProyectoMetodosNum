@@ -1,4 +1,4 @@
-# Project Title name
+# FUNCTIVA
 
 Este Proyecto esta diseñado por Estudidantes del programa de Ingenieria de Sistemas VI semestre Universidad de Nariño
 - Brayan  Alexander Benavides Tapia
