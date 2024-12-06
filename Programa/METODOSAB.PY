@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import messagebox, Toplevel, ttk
 import sympy as sp
 from sympy.parsing.sympy_parser import parse_expr
-import pandas as pd
 
 class FunctivaApp:
     def __init__(self, root):
@@ -54,7 +53,6 @@ class FunctivaApp:
         self.solve_func_button.pack(pady=5)
 
     def update_method_menu(self, selection):
-        # Cambiar el menú de métodos específicos según el tipo
         if selection == "Métodos Abiertos":
             self.method_var.set("Newton-Raphson")
             self.method_menu['menu'].delete(0, 'end')
@@ -160,9 +158,12 @@ class FunctivaApp:
                 return
             x0, x1 = x1, x2
         messagebox.showerror("Error", "No se encontró raíz con el método de la secante.")
-
+    
     def biseccion(self, funcion, x, a, b, tol=1e-6, max_iter=100):
+        from sympy import N  # Asegura cálculos numéricos precisos
         iteraciones = []
+        
+        # Verificar si los extremos iniciales son raíces
         if abs(funcion.evalf(subs={x: a})) < tol:
             messagebox.showinfo("Resultado", f"Raíz encontrada en a: {a}")
             return
@@ -170,22 +171,35 @@ class FunctivaApp:
             messagebox.showinfo("Resultado", f"Raíz encontrada en b: {b}")
             return
 
+        # Verificar si el intervalo es válido
+        if funcion.evalf(subs={x: a}) * funcion.evalf(subs={x: b}) > 0:
+            messagebox.showerror("Error", "El intervalo no contiene una raíz.")
+            return
+
         for i in range(max_iter):
-            c = (a + b) / 2
-            error = (abs(b - a) / 2)*100
-            iteraciones.append([i + 1, a, b, c, abs(funcion.evalf(subs={x: c})), error])
-            if abs(funcion.evalf(subs={x: c})) < tol or error < tol:
-                columnas = ["Iteración", "a", "b", "c", "|f(c)|", "Error"]
+            c = (a + b) / 2  # Punto medio
+            fc = funcion.evalf(subs={x: c})  # Evaluación en c
+            error = (abs(b - a) / 2) * 100  # Error relativo aproximado
+
+            # Guardar iteraciones
+            iteraciones.append([i + 1, N(a, 8), N(b, 8), N(c, 8), N(abs(fc), 8), N(error, 8)])
+
+            # Verificar condiciones de parada
+            if abs(fc) < tol or error < tol:
+                columnas = ["Iteración", "a", "b", "c", "|f(c)|", "Error (%)"]
                 self.mostrar_iteraciones(iteraciones, columnas)
-                messagebox.showinfo("Resultado", f"Raíz aproximada encontrada: {c}")
+                messagebox.showinfo("Resultado", f"Raíz aproximada encontrada: {c:.8f}")
                 return
 
-            # Comparar los módulos (magnitudes) de los números complejos
-            if abs(funcion.evalf(subs={x: a})) * abs(funcion.evalf(subs={x: c})) < 0:
+            # Actualizar el intervalo
+            if funcion.evalf(subs={x: a}) * fc < 0:
                 b = c
             else:
                 a = c
 
+        # Si no se encuentra raíz después del máximo de iteraciones
+        columnas = ["Iteración", "a", "b", "c", "|f(c)|", "Error (%)"]
+        self.mostrar_iteraciones(iteraciones, columnas)
         messagebox.showerror("Error", "No se encontró raíz con el método de bisección.")
 
     def falsa_posicion(self, funcion, x, a, b, tol=1e-6, max_iter=100):
@@ -215,7 +229,7 @@ class FunctivaApp:
             else:
                 a = c
 
-        messagebox.showerror("Error", "No se encontró raíz con el método de falsa posición.")
+        messagebox.showerror("Error", "No se encontró raíz con el método de falsa posición.")
 
 # Crear la ventana principal de la aplicación
 root = tk.Tk()

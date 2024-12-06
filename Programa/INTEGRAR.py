@@ -1,8 +1,3 @@
-#regla 3/8 bien 
-#regla 1/3
-#regla boole 
-#regla trapecio
-
 import tkinter as tk
 from tkinter import messagebox, ttk
 import sympy as sp

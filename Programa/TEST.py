@@ -1,5 +1,3 @@
-#arreglar metodos abiertos y cerrados:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-#matriz inversa funciona bien
 import tkinter as tk
 from tkinter import messagebox
 import subprocess
@@ -34,13 +32,7 @@ class FunctivaApp:
         self.integrate_button = tk.Button(self.root, text="Solución por Metodos Abiertos y Cerrados", command=self.Metodos_abiertos_cerrados, bg="#4CAF50", fg="white", font=("Helvetica", 12, "bold"))
         self.integrate_button.pack(pady=5)
 
-        # Labels and Entries for matrix input
-
-        #ttk.Separator(self.root, orient=tk.HORIZONTAL).place(relx=0, rely=0.76, relheight=1, relwidth=1) 
-        
-
     def update_method_menu(self, selection):
-        # Cambiar el menú de métodos según el tipo seleccionado
         if selection == "Métodos Abiertos":
             self.method_var.set("Newton-Raphson")
             self.method_menu['menu'].delete(0, 'end')
@@ -56,22 +48,22 @@ class FunctivaApp:
 
     def Metodos_abiertos_cerrados(self):
         try:
-            subprocess.Popen(["python", "METODOSAB.py"])  # Cambia 'segundo_archivo.py' por el nombre de tu archivo
+            subprocess.Popen(["python", "METODOSAB.py"])
         except FileNotFoundError:
-            messagebox.showerror("Error", "No se encontró el archivo 'segundo_archivo.py'. Verifica su ubicación.") 
+            messagebox.showerror("Error", "No se encontró el archivo 'METODOSAB.py'. Verifica su ubicación.")
     
 
     def integrar_funcion(self):
         try:
-            subprocess.Popen(["python", "INTEGRAR.py"])  # Cambia 'segundo_archivo.py' por el nombre de tu archivo
+            subprocess.Popen(["python", "INTEGRAR.py"])
         except FileNotFoundError:
-            messagebox.showerror("Error", "No se encontró el archivo 'segundo_archivo.py'. Verifica su ubicación.")
+            messagebox.showerror("Error", "No se encontró el archivo 'INTEGRAR.py'. Verifica su ubicación.")
 
     def Matriz(self):
         try:
-            subprocess.Popen(["python", "MATRIZ.py"])  # Cambia 'segundo_archivo.py' por el nombre de tu archivo
+            subprocess.Popen(["python", "MATRIZ.py"])
         except FileNotFoundError:
-            messagebox.showerror("Error", "No se encontró el archivo 'segundo_archivo.py'. Verifica su ubicación.")
+            messagebox.showerror("Error", "No se encontró el archivo 'MATRIZ.py'. Verifica su ubicación.")
 
 if __name__ == "__main__":
     root = tk.Tk()
